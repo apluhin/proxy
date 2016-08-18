@@ -5,7 +5,6 @@ import org.junit.Test;
 import ru.sbt.calc.CalImpl;
 import ru.sbt.calc.Calculator;
 
-import java.lang.reflect.Proxy;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -15,10 +14,13 @@ public class CacheProxyTest {
 
     Calculator calculator;
 
+
     @Before
     public void setUp() throws Exception {
         CalImpl cal = new CalImpl();
-        calculator = (Calculator) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(), cal.getClass().getInterfaces(), new CacheProxy(cal, "test"));
+
+        calculator = CacheProxy.cache(cal);
+
 
     }
 

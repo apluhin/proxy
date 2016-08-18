@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.*;
 
 public class CacheProxy implements InvocationHandler {
@@ -22,13 +23,23 @@ public class CacheProxy implements InvocationHandler {
 
     private Map<Integer, CacheWork> cacheObject = new HashMap<>(); //different cache for different method
 
-    private String fullName;
+    private String fullName = "";
 
 
-    public CacheProxy(Object delegate, String name) {
-        fullName = name != null ? name : "";
+    public CacheProxy(Object delegate) {
         this.delegate = delegate;
+
     }
+
+    public CacheProxy() {
+    }
+
+    public static <T> T cache(Object delegate) {
+        return (T) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
+                delegate.getClass().getInterfaces(), new CacheProxy(delegate));
+    }
+
+
 
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
